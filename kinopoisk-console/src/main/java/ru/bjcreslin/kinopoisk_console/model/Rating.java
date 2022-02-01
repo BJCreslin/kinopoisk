@@ -1,4 +1,4 @@
-package ru.bjcreslin.model;
+package ru.bjcreslin.kinopoisk_console.model;
 
 import lombok.Getter;
 import lombok.Setter;
