@@ -29,7 +29,7 @@ public class WebProviderImpl implements RatingProvider {
     private String url;
 
     @Override
-    public Element get() {
+    public Element getHtmlBody() {
         LOGGER.info(CONNECTING_TO, url);
         try {
             Connection connection = Jsoup.connect(url);

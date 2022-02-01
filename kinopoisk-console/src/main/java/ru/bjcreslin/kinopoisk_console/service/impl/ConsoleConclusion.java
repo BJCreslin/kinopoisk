@@ -6,8 +6,9 @@ import ru.bjcreslin.kinopoisk_console.service.Conclusion;
 
 import java.util.List;
 
-@Service
+@Service ("consoleConclusion")
 public class ConsoleConclusion implements Conclusion {
+
     @Override
     public void output(List<Movie> movieList) {
         movieList.forEach(System.out::println);

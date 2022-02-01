@@ -23,7 +23,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        var elemenet = provider.get();
+        var elemenet = provider.getHtmlBody();
         var movies = kinoParser.getMoviesWithRating(elemenet);
         resulteres.forEach(x -> x.output(movies));
     }

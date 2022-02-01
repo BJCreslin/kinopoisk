@@ -22,7 +22,6 @@ public class DbaseConclusion implements Conclusion {
 
     private static final String MOVIE_RATING_HAD_BEING_SAVED = "Movie rating for {} has been saved.";
 
-
     public static final String OBJECTS_WERE_SAVED = "{} objects were saved";
 
     private final MovieRepository movieRepository;
