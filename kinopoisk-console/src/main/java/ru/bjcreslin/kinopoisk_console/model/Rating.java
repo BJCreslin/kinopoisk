@@ -2,24 +2,24 @@ package ru.bjcreslin.kinopoisk_console.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "rating")
+@DynamicUpdate
 public class Rating extends AbstractPersistable<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "movie_id",nullable = false)
+    @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
     @Column(name = "position", nullable = false)
@@ -32,7 +32,8 @@ public class Rating extends AbstractPersistable<Long> {
     private Double ratingValue;
 
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    @CreatedDate
+    private Date date;
 
     @Override
     public String toString() {

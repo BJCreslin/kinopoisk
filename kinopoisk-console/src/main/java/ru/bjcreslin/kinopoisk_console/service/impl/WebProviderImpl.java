@@ -17,9 +17,11 @@ import java.io.IOException;
 @Service("webProvider")
 @PropertySource("classpath:kinopoisk.properties")
 public class WebProviderImpl implements RatingProvider {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(WebProviderImpl.class);
 
     public static final String CONNECTING_TO = "Connecting to {}";
+
     public static final String CANNOT_CONNECT = "Cannot connect to %s";
 
     @Value("${kinopoisk.userAgent:Mozilla}")
@@ -28,21 +30,22 @@ public class WebProviderImpl implements RatingProvider {
     @Value("${kinopoisk.url}")
     private String url;
 
+    @Value("${kinopoisk.referrer}")
+    private String referrer;
+
+    @Value("${kinopoisk.timeout}")
+    private int timeout;
+
     @Override
     public Element getHtmlBody() {
         LOGGER.info(CONNECTING_TO, url);
         try {
             Connection connection = Jsoup.connect(url);
             connection.userAgent(userAgent);
-            connection.timeout(5000);
-            connection.cookie("cookiename", "val234");
-            connection.cookie("cookiename", "val234");
-            connection.referrer("http://google.com");
-            connection.header("headersecurity", "xyz123");
+            connection.timeout(timeout);
+            connection.referrer(referrer);
             Document doc = connection.get();
-
-            System.out.println(doc.html());
-            System.out.println("**************************");
+            System.out.println(doc.head().text());
             return doc.body();
         } catch (IOException e) {
             var message = String.format(CANNOT_CONNECT, url);

@@ -24,6 +24,7 @@ public class DbaseConclusion implements Conclusion {
 
     public static final String OBJECTS_WERE_SAVED = "{} objects were saved";
 
+
     private final MovieRepository movieRepository;
 
     public DbaseConclusion(MovieRepository movieRepository) {
@@ -37,7 +38,7 @@ public class DbaseConclusion implements Conclusion {
                 var optionalMovie = movieRepository.findMovieByOriginalName(movie.getOriginalName());
                 if (optionalMovie.isPresent()) {
                     var movie1 = optionalMovie.get();
-                    movie1.getRating().addAll(movie.getRating());
+                    var rating = movie1.getRating().addAll(movie.getRating());
                     movieRepository.save(optionalMovie.get());
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug(MOVIE_RATING_HAD_BEING_SAVED, movie);
