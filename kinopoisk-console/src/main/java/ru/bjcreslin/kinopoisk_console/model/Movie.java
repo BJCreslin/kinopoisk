@@ -2,13 +2,11 @@ package ru.bjcreslin.kinopoisk_console.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,9 +22,10 @@ public class Movie extends AbstractPersistable<Long> {
 
     @Column(name = "original_name", nullable = false)
     @Type(type = "org.hibernate.type.TextType")
+    @NaturalId
     private String originalName;
 
-    @OneToMany(mappedBy = "movie")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "movie")
     private Set<Rating> rating = new HashSet<>();
 
     @Override

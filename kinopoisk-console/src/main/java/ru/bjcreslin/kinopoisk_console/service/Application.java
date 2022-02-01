@@ -5,23 +5,26 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import ru.bjcreslin.kinopoisk_console.service.impl.KinoParser;
 
+import java.util.List;
+
 @Component
 public class Application implements CommandLineRunner {
 
     private final RatingProvider provider;
     private final KinoParser kinoParser;
 
-    public Application(@Qualifier("fileProvider") RatingProvider  provider, ru.bjcreslin.kinopoisk_console.service.impl.KinoParser kinoParser) {
+    private final List<Conclusion> resulteres;
+
+    public Application(@Qualifier("fileProvider") RatingProvider provider, KinoParser kinoParser, List<Conclusion> resulteres) {
         this.provider = provider;
         this.kinoParser = kinoParser;
+        this.resulteres = resulteres;
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         var elemenet = provider.get();
-        System.out.println(elemenet.html());
         var movies = kinoParser.getMoviesWithRating(elemenet);
-        System.out.println("NUMBER " + movies.size());
-        movies.stream().forEach(System.out::println);
+        resulteres.forEach(x -> x.output(movies));
     }
 }
