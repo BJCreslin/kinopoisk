@@ -2,6 +2,7 @@ package ru.bjcreslin.kinopoisk_console.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -30,7 +31,8 @@ public class Movie extends AbstractPersistable<Long> {
     @NaturalId
     private String year;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie", cascade = CascadeType.ALL)
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movieRatingPK.movie")
     private Set<Rating> rating = new HashSet<>();
 
     @Override

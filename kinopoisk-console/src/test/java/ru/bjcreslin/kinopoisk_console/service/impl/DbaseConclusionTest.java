@@ -33,7 +33,7 @@ class DbaseConclusionTest {
 
     public DbaseConclusionTest() {
         movieRepository = Mockito.mock(MovieRepository.class);
-        when(movieRepository.findMovieByOriginalName(anyString())).thenReturn(Optional.of(MovieGenerator.get()));
+        when(movieRepository.findMovieByOriginalName(anyString())).thenReturn(MovieGenerator.get());
         when(movieRepository.save(any())).thenReturn(MovieGenerator.get());
 
         ratingRepository = Mockito.mock(RatingRepository.class);

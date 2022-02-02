@@ -13,7 +13,10 @@ import ru.bjcreslin.kinopoisk_console.repository.MovieRepository;
 import ru.bjcreslin.kinopoisk_console.repository.RatingRepository;
 import ru.bjcreslin.kinopoisk_console.service.Conclusion;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.bjcreslin.kinopoisk_console.exceptions.SaveDbException.DB_SAVE_ERROR;
 
@@ -28,6 +31,8 @@ public class DbaseConclusion implements Conclusion {
 
     public static final String OBJECTS_WERE_SAVED = "{} objects were saved";
 
+    public static final String TODAY = "The rating for the film {} has already been received today";
+
     private final RatingRepository ratingRepository;
 
     private final MovieRepository movieRepository;
@@ -38,13 +43,14 @@ public class DbaseConclusion implements Conclusion {
     }
 
     @Override
+    @Transactional
     public void output(List<MovieWithRatingDto> movieList) {
         for (MovieWithRatingDto movieWithRatingDto : movieList) {
             var optionalMovie = movieRepository.findMovieByOriginalName(movieWithRatingDto.getOriginalName());
-            if (optionalMovie.isPresent()) {
-                saveToDb(optionalMovie.get(), getRatingFromDto(movieWithRatingDto));
+            if (Objects.nonNull(optionalMovie)) {
+                saveToDb(optionalMovie, getRatingFromDto(movieWithRatingDto));
                 if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(MOVIE_RATING_HAD_BEING_SAVED, optionalMovie.get());
+                    LOGGER.debug(MOVIE_RATING_HAD_BEING_SAVED, optionalMovie);
                 }
             } else {
                 saveToDb(getMovieFromDto(movieWithRatingDto), getRatingFromDto(movieWithRatingDto));
@@ -56,17 +62,23 @@ public class DbaseConclusion implements Conclusion {
         LOGGER.info(OBJECTS_WERE_SAVED, movieList.size());
     }
 
-    private void saveToDb(Movie movie, Rating rating) {
-        try {
-            movie.getRating().add(rating);
-            rating.setMovie(movie);
-            ratingRepository.save(rating);
-            movieRepository.save(movie);
-        } catch (DataAccessException e) {
-            LOGGER.error(DB_SAVE_ERROR, e);
-            throw new SaveDbException(DB_SAVE_ERROR, e);
+    protected void saveToDb(Movie movie, Rating rating) {
+        var pk = ratingRepository.findByMovieRatingPKMovieAndMovieRatingPKDate(movie, LocalDate.now());
+        if (pk == null) {
+            try {
+                movie.getRating().add(rating);
+                ratingRepository.saveAndFlush(rating);
+                movieRepository.saveAndFlush(movie);
+            } catch (DataAccessException e) {
+                LOGGER.error(DB_SAVE_ERROR, e);
+                throw new SaveDbException(DB_SAVE_ERROR, e);
+            }
+//        } else {
+//            LOGGER.info(TODAY, movie.getName());
+//        }
         }
     }
+
 
     protected Rating getRatingFromDto(MovieWithRatingDto movieWithRatingDto) {
         var rating = new Rating();

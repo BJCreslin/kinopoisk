@@ -2,13 +2,13 @@ package ru.bjcreslin.kinopoisk_console.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Getter
@@ -16,11 +16,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "rating")
 @EntityListeners(AuditingEntityListener.class)
-public class Rating extends AbstractPersistable<Long> {
+public class Rating {
 
-    @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinColumn(name = "movie_id")
-    private Movie movie;
+    @EmbeddedId
+    private MovieRatingPK movieRatingPK;
 
     @Column(name = "position", nullable = false)
     private Integer position;
@@ -31,37 +30,28 @@ public class Rating extends AbstractPersistable<Long> {
     @Column(name = "rating_value", nullable = false)
     private Double ratingValue;
 
-    @Column(name = "date")
-    @CreatedDate
-    private LocalDate date;
-
-    @Override
-    public String toString() {
-        return "Rating{" +
-                "position=" + position +
-                ", voters=" + voters +
-                ", rating=" + ratingValue +
-                ", date=" + date +
-                '}';
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Rating)) return false;
-        if (!super.equals(o)) return false;
 
         Rating rating = (Rating) o;
 
-        if (!Objects.equals(movie, rating.movie)) return false;
-        return Objects.equals(date, rating.date);
+        return Objects.equals(movieRatingPK, rating.movieRatingPK);
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (movie != null ? movie.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        return result;
+        return movieRatingPK != null ? movieRatingPK.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Rating{" +
+                "movieRatingPK=" + movieRatingPK +
+                ", position=" + position +
+                ", voters=" + voters +
+                ", ratingValue=" + ratingValue +
+                '}';
     }
 }
