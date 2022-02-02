@@ -55,7 +55,7 @@ public class DbaseConclusion implements Conclusion {
                     LOGGER.debug(MOVIE_RATING_HAD_BEING_SAVED, optionalMovie);
                 }
             } else {
-                saveNewMovieToDb(movieWithRatingDto);
+                saveNewMovieToDb(getMovieFromDto(movieWithRatingDto), getRatingFromDto(movieWithRatingDto));
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(NEW_MOVIE_HAD_BEING_SAVED, movieWithRatingDto);
                 }
@@ -64,17 +64,15 @@ public class DbaseConclusion implements Conclusion {
         LOGGER.info(OBJECTS_WERE_SAVED, movieList.size());
     }
 
-    private void saveNewMovieToDb(MovieWithRatingDto movieWithRatingDto) {
-        var movie = movieRepository.save(getMovieFromDto(movieWithRatingDto));
+    protected void saveNewMovieToDb(Movie movie, Rating rating) {
+        movie = movieRepository.save(movie);
         var ratRk = new MovieRatingPK(movie);
-        var rati = getRatingFromDto(movieWithRatingDto);
-        rati.setMovieRatingPK(ratRk);
-        var rat = ratingRepository.save(rati);
+        rating.setMovieRatingPK(ratRk);
+        var rat = ratingRepository.save(rating);
         movie.getRating().add(rat);
     }
 
     protected void saveToDb(Movie movie, Rating rating) {
-        movieRepository.findMovieByOriginalName(movie.getName());
         if (ratingRepository.findByMovieRatingPKMovieAndMovieRatingPKDate(movie, LocalDate.now()) == null) {
             try {
                 movie.getRating().add(rating);

@@ -12,7 +12,6 @@ import ru.bjcreslin.kinopoisk_console.repository.MovieRepository;
 import ru.bjcreslin.kinopoisk_console.repository.RatingRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,6 +48,20 @@ class DbaseConclusionTest {
         verify(movieRepository, times(movies.size())).findMovieByOriginalName(anyString());
         verify(movieRepository, times(movies.size())).save(any());
         verify(ratingRepository, times(movies.size())).save(any());
+    }
+
+    @Test
+    void shouldSave() {
+        dbaseConclusion.saveToDb(MovieGenerator.get(), RatingGenerator.get());
+        verify(movieRepository, times(1)).save(any());
+        verify(ratingRepository, times(1)).save(any());
+    }
+
+    @Test
+    void shouldNewSave() {
+        dbaseConclusion.saveNewMovieToDb(MovieGenerator.get(), RatingGenerator.get());
+        verify(movieRepository, times(1)).save(any());
+        verify(ratingRepository, times(1)).save(any());
     }
 
     @Test
