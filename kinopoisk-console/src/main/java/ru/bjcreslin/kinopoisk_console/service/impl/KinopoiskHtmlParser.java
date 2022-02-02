@@ -13,13 +13,15 @@ import java.util.stream.Collectors;
 import static ru.bjcreslin.kinopoisk_console.exceptions.HtmlParsingFailed.PARSING_ERROR;
 
 @Service
-public class KinoParser {
+public class KinopoiskHtmlParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KinoParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KinopoiskHtmlParser.class);
 
     public static final String PARSING_MOVIE = "Parsing movie: {}";
 
     public static final String NAME_AND_YEAR_DELIMITER = ",";
+
+    public static final String ONLY_DIGITS_REGEX = "^[0-9]+$";
 
     public static final String CLASS_FOR_MOVIES = "desktop-rating-selection-film-item";
 
@@ -71,7 +73,7 @@ public class KinoParser {
 
     protected String getOriginalName(Element element) {
         var originalName = element.getElementsByClass(CLASS_FOR_ORIGINAL_NAME).first().text();
-        if (originalName.trim().matches("[0-9]")) {
+        if (originalName.matches(ONLY_DIGITS_REGEX)) {
             originalName = getName(element);
         } else {
             originalName = originalName.trim().split(NAME_AND_YEAR_DELIMITER)[0].trim();

@@ -3,7 +3,7 @@ package ru.bjcreslin.kinopoisk_console.service;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import ru.bjcreslin.kinopoisk_console.service.impl.KinoParser;
+import ru.bjcreslin.kinopoisk_console.service.impl.KinopoiskHtmlParser;
 
 import java.util.List;
 
@@ -11,11 +11,11 @@ import java.util.List;
 public class Application implements CommandLineRunner {
 
     private final RatingProvider provider;
-    private final KinoParser kinoParser;
+    private final KinopoiskHtmlParser kinoParser;
 
     private final List<Conclusion> resulteres;
 
-    public Application(@Qualifier("fileProvider") RatingProvider provider, KinoParser kinoParser, List<Conclusion> resulteres) {
+    public Application(@Qualifier("fileProvider") RatingProvider provider, KinopoiskHtmlParser kinoParser, List<Conclusion> resulteres) {
         this.provider = provider;
         this.kinoParser = kinoParser;
         this.resulteres = resulteres;
