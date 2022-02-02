@@ -58,8 +58,9 @@ public class DbaseConclusion implements Conclusion {
 
     private void saveToDb(Movie movie, Rating rating) {
         try {
-            rating = ratingRepository.save(rating);
             movie.getRating().add(rating);
+            rating.setMovie(movie);
+            ratingRepository.save(rating);
             movieRepository.save(movie);
         } catch (DataAccessException e) {
             LOGGER.error(DB_SAVE_ERROR, e);

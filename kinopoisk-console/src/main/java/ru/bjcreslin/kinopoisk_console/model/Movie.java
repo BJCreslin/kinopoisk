@@ -30,7 +30,7 @@ public class Movie extends AbstractPersistable<Long> {
     @NaturalId
     private String year;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie", cascade = CascadeType.ALL)
     private Set<Rating> rating = new HashSet<>();
 
     @Override

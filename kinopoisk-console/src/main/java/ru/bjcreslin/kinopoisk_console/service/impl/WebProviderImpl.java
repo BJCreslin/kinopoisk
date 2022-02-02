@@ -24,6 +24,10 @@ public class WebProviderImpl implements RatingProvider {
 
     public static final String CANNOT_CONNECT = "Cannot connect to %s";
 
+    public static final String MAY_BE_ROBOT = "!!!! Kinopoisk server thinks the robot is collecting data. Run later or run the program with the key \"file\" to get data from the file 250.html ";
+
+    public static final String BAD_SERVER_HEAD = "Ой!";
+
     @Value("${kinopoisk.userAgent:Mozilla}")
     private String userAgent;
 
@@ -45,7 +49,10 @@ public class WebProviderImpl implements RatingProvider {
             connection.timeout(timeout);
             connection.referrer(referrer);
             Document doc = connection.get();
-            System.out.println(doc.head().text());
+            if(doc.head().text().equals(BAD_SERVER_HEAD)){
+                LOGGER.error(MAY_BE_ROBOT);
+                throw new CannotConnectException(MAY_BE_ROBOT);
+            }
             return doc.body();
         } catch (IOException e) {
             var message = String.format(CANNOT_CONNECT, url);
@@ -53,5 +60,4 @@ public class WebProviderImpl implements RatingProvider {
             throw new CannotConnectException(message, e);
         }
     }
-
 }

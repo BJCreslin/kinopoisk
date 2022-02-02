@@ -18,7 +18,7 @@ import java.util.Objects;
 @DynamicUpdate
 public class Rating extends AbstractPersistable<Long> {
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name = "movie_id")
     private Movie movie;
 
