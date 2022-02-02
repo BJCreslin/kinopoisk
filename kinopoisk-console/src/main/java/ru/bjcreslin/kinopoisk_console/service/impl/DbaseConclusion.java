@@ -43,7 +43,9 @@ public class DbaseConclusion implements Conclusion {
         this.movieRepository = movieRepository;
     }
 
+
     @Override
+    @Transactional
     public void output(List<MovieWithRatingDto> movieList) {
         for (MovieWithRatingDto movieWithRatingDto : movieList) {
             var optionalMovie = movieRepository.findMovieByOriginalName(movieWithRatingDto.getOriginalName());
@@ -53,14 +55,7 @@ public class DbaseConclusion implements Conclusion {
                     LOGGER.debug(MOVIE_RATING_HAD_BEING_SAVED, optionalMovie);
                 }
             } else {
-                var movie=movieRepository.save(getMovieFromDto(movieWithRatingDto));
-                var ratRk=new MovieRatingPK(movie);
-                var rati=getRatingFromDto(movieWithRatingDto);
-                rati.setMovieRatingPK(ratRk);
-                var rat=ratingRepository.save(rati);
-                movie.getRating().add(rat);
-                movieRepository.saveAndFlush(movie);
-               // saveToDb(movie, getRatingFromDto(movieWithRatingDto));
+                saveNewMovieToDb(movieWithRatingDto);
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(NEW_MOVIE_HAD_BEING_SAVED, movieWithRatingDto);
                 }
@@ -69,24 +64,30 @@ public class DbaseConclusion implements Conclusion {
         LOGGER.info(OBJECTS_WERE_SAVED, movieList.size());
     }
 
+    private void saveNewMovieToDb(MovieWithRatingDto movieWithRatingDto) {
+        var movie = movieRepository.save(getMovieFromDto(movieWithRatingDto));
+        var ratRk = new MovieRatingPK(movie);
+        var rati = getRatingFromDto(movieWithRatingDto);
+        rati.setMovieRatingPK(ratRk);
+        var rat = ratingRepository.save(rati);
+        movie.getRating().add(rat);
+    }
+
     protected void saveToDb(Movie movie, Rating rating) {
         movieRepository.findMovieByOriginalName(movie.getName());
-        var pk = ratingRepository.findByMovieRatingPKMovieAndMovieRatingPKDate(movie, LocalDate.now());
-        if (pk == null) {
+        if (ratingRepository.findByMovieRatingPKMovieAndMovieRatingPKDate(movie, LocalDate.now()) == null) {
             try {
                 movie.getRating().add(rating);
-                ratingRepository.saveAndFlush(rating);
-                movieRepository.saveAndFlush(movie);
+                ratingRepository.save(rating);
+                movieRepository.save(movie);
             } catch (DataAccessException e) {
                 LOGGER.error(DB_SAVE_ERROR, e);
                 throw new SaveDbException(DB_SAVE_ERROR, e);
             }
-//        } else {
-//            LOGGER.info(TODAY, movie.getName());
-//        }
+        } else {
+            LOGGER.info(TODAY, movie.getName());
         }
     }
-
 
     protected Rating getRatingFromDto(MovieWithRatingDto movieWithRatingDto) {
         var rating = new Rating();

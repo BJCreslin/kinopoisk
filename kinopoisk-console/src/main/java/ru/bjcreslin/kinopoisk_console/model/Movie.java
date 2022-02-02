@@ -7,7 +7,12 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +20,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "movie")
-public class Movie extends AbstractPersistable<Long> {
+public class Movie extends AbstractPersistable<Long> implements Serializable {
 
     @Column(name = "name", nullable = false)
     @Type(type = "org.hibernate.type.TextType")
@@ -32,7 +37,7 @@ public class Movie extends AbstractPersistable<Long> {
     private String year;
 
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.PERSIST})
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movieRatingPK_movie")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movieRatingPK.movie")
     private Set<Rating> rating = new HashSet<>();
 
     @Override

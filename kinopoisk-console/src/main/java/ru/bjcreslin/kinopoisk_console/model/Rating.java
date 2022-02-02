@@ -26,10 +26,6 @@ public class Rating {
     @Column(name = "rating_value", nullable = false)
     private Double ratingValue;
 
-    @ManyToOne
-    @JoinColumn(name = "movie_rating_pk_movie_id")
-    private Movie movieRatingPK_movie;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,7 +44,7 @@ public class Rating {
     @Override
     public String toString() {
         return "Rating{" +
-                "movieRatingPK=" + movieRatingPK +
+                "movieRatingPK=" + movieRatingPK.getDate() +
                 ", position=" + position +
                 ", voters=" + voters +
                 ", ratingValue=" + ratingValue +

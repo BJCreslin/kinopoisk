@@ -20,8 +20,9 @@ import java.time.LocalDate;
 public class MovieRatingPK implements Serializable {
 
     private static final long serialVersionUID = -1571748779013286215L;
+
     @ManyToOne
-    @JoinColumn(name = "movie_id", nullable = false)
+    @JoinColumn(name = "movie_id")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Movie movie;
 
