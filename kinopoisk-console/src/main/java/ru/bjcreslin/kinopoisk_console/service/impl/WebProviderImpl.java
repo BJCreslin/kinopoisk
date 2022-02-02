@@ -49,7 +49,7 @@ public class WebProviderImpl implements RatingProvider {
             connection.timeout(timeout);
             connection.referrer(referrer);
             Document doc = connection.get();
-            if(doc.head().text().equals(BAD_SERVER_HEAD)){
+            if (doc.head().text().equals(BAD_SERVER_HEAD)) {
                 LOGGER.error(MAY_BE_ROBOT);
                 throw new CannotConnectException(MAY_BE_ROBOT);
             }

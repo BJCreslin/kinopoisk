@@ -5,17 +5,17 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "rating")
-@DynamicUpdate
+@EntityListeners(AuditingEntityListener.class)
 public class Rating extends AbstractPersistable<Long> {
 
     @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
@@ -33,7 +33,7 @@ public class Rating extends AbstractPersistable<Long> {
 
     @Column(name = "date")
     @CreatedDate
-    private Date date;
+    private LocalDate date;
 
     @Override
     public String toString() {
