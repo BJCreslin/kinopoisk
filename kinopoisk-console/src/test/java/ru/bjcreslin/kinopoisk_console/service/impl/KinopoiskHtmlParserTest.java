@@ -4,6 +4,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.bjcreslin.kinopoisk_console.exceptions.HtmlParsingFailed;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class KinopoiskHtmlParserTest {
 
@@ -88,5 +92,13 @@ class KinopoiskHtmlParserTest {
     void shouldGetRatingRu() {
         Element element = Jsoup.parseBodyFragment(htmlRu).root();
         Assertions.assertEquals(8.7, kinoParser.getRatingValue(element), .01);
+    }
+
+    @Test
+    void sholdException() {
+        Exception exception = assertThrows(HtmlParsingFailed.class, () -> {
+            kinoParser.getMovie(null);
+        });
+        assertTrue(exception.getMessage().contains(HtmlParsingFailed.PARSING_ERROR));
     }
 }

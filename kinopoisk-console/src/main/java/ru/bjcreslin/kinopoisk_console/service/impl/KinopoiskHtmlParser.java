@@ -39,7 +39,7 @@ public class KinopoiskHtmlParser {
         return element.getElementsByClass(CLASS_FOR_MOVIES).stream().map(this::getMovie).collect(Collectors.toList());
     }
 
-    public MovieWithRatingDto getMovie(Element element) {
+    protected MovieWithRatingDto getMovie(Element element) {
         try {
             var movie = new MovieWithRatingDto(
                     getName(element),
