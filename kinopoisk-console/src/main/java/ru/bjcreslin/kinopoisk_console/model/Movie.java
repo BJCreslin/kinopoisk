@@ -32,7 +32,7 @@ public class Movie extends AbstractPersistable<Long> {
     private String year;
 
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.MERGE, org.hibernate.annotations.CascadeType.PERSIST})
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movieRatingPK.movie")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movieRatingPK_movie")
     private Set<Rating> rating = new HashSet<>();
 
     @Override

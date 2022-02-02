@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, MovieRatingPK> {
-    boolean existsByMovieRatingPK(MovieRatingPK movieRatingPK);
+    boolean existsByMovieRatingPK_Movie_NameAndMovieRatingPK_Date(String name, LocalDate date);
 
   Rating findByMovieRatingPKMovieAndMovieRatingPKDate(Movie movie, LocalDate date);
 }

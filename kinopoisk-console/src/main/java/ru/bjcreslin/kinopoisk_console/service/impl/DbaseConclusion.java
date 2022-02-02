@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.bjcreslin.kinopoisk_console.exceptions.SaveDbException;
 import ru.bjcreslin.kinopoisk_console.model.Movie;
+import ru.bjcreslin.kinopoisk_console.model.MovieRatingPK;
 import ru.bjcreslin.kinopoisk_console.model.MovieWithRatingDto;
 import ru.bjcreslin.kinopoisk_console.model.Rating;
 import ru.bjcreslin.kinopoisk_console.repository.MovieRepository;
@@ -43,7 +44,6 @@ public class DbaseConclusion implements Conclusion {
     }
 
     @Override
-    @Transactional
     public void output(List<MovieWithRatingDto> movieList) {
         for (MovieWithRatingDto movieWithRatingDto : movieList) {
             var optionalMovie = movieRepository.findMovieByOriginalName(movieWithRatingDto.getOriginalName());
@@ -53,7 +53,14 @@ public class DbaseConclusion implements Conclusion {
                     LOGGER.debug(MOVIE_RATING_HAD_BEING_SAVED, optionalMovie);
                 }
             } else {
-                saveToDb(getMovieFromDto(movieWithRatingDto), getRatingFromDto(movieWithRatingDto));
+                var movie=movieRepository.save(getMovieFromDto(movieWithRatingDto));
+                var ratRk=new MovieRatingPK(movie);
+                var rati=getRatingFromDto(movieWithRatingDto);
+                rati.setMovieRatingPK(ratRk);
+                var rat=ratingRepository.save(rati);
+                movie.getRating().add(rat);
+                movieRepository.saveAndFlush(movie);
+               // saveToDb(movie, getRatingFromDto(movieWithRatingDto));
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(NEW_MOVIE_HAD_BEING_SAVED, movieWithRatingDto);
                 }
@@ -63,6 +70,7 @@ public class DbaseConclusion implements Conclusion {
     }
 
     protected void saveToDb(Movie movie, Rating rating) {
+        movieRepository.findMovieByOriginalName(movie.getName());
         var pk = ratingRepository.findByMovieRatingPKMovieAndMovieRatingPKDate(movie, LocalDate.now());
         if (pk == null) {
             try {

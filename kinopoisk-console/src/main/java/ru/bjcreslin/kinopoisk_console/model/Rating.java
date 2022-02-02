@@ -4,11 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
@@ -29,6 +25,10 @@ public class Rating {
 
     @Column(name = "rating_value", nullable = false)
     private Double ratingValue;
+
+    @ManyToOne
+    @JoinColumn(name = "movie_rating_pk_movie_id")
+    private Movie movieRatingPK_movie;
 
     @Override
     public boolean equals(Object o) {
