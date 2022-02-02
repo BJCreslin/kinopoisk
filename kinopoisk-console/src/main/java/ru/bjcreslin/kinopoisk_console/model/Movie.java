@@ -25,7 +25,12 @@ public class Movie extends AbstractPersistable<Long> {
     @NaturalId
     private String originalName;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "movie")
+    @Column(name = "year", nullable = false)
+    @Type(type = "org.hibernate.type.TextType")
+    @NaturalId
+    private String year;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "movie")
     private Set<Rating> rating = new HashSet<>();
 
     @Override
@@ -51,6 +56,7 @@ public class Movie extends AbstractPersistable<Long> {
         return "Movie{" +
                 "name='" + name + '\'' +
                 ", originalName='" + originalName + '\'' +
+                ", year='" + year + '\'' +
                 ", rating=" + rating +
                 '}';
     }

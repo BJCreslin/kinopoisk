@@ -19,7 +19,7 @@ import java.util.Objects;
 public class Rating extends AbstractPersistable<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "movie_id", nullable = false)
+    @JoinColumn(name = "movie_id")
     private Movie movie;
 
     @Column(name = "position", nullable = false)
@@ -31,7 +31,7 @@ public class Rating extends AbstractPersistable<Long> {
     @Column(name = "rating_value", nullable = false)
     private Double ratingValue;
 
-    @Column(name = "date", nullable = false)
+    @Column(name = "date")
     @CreatedDate
     private Date date;
 

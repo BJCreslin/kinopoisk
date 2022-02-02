@@ -1,5 +1,12 @@
 package ru.bjcreslin.kinopoisk_console.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class MovieWithRatingDto {
     private final String name;
     private final String originalName;
@@ -8,12 +15,15 @@ public class MovieWithRatingDto {
     private final Integer voters;
     private final Double ratingValue;
 
-    public MovieWithRatingDto(String name, String originalName, String year, Integer position, Integer voters, Double ratingValue) {
-        this.name = name;
-        this.originalName = originalName;
-        this.year = year;
-        this.position = position;
-        this.voters = voters;
-        this.ratingValue = ratingValue;
+    @Override
+    public String toString() {
+        return "MovieWithRatingDto{" +
+                "name='" + name + '\'' +
+                ", originalName='" + originalName + '\'' +
+                ", year='" + year + '\'' +
+                ", position=" + position +
+                ", voters=" + voters +
+                ", ratingValue=" + ratingValue +
+                '}';
     }
 }
