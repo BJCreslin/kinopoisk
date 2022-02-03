@@ -2,8 +2,9 @@ package ru.bjcreslin.kinopoisk_web.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.bjcreslin.dto.MovieWithRatingDto;
+import ru.bjcreslin.kinopoisk_web.model.MovieWithRatingDto;
 import ru.bjcreslin.kinopoisk_web.model.Rating;
 import ru.bjcreslin.kinopoisk_web.repository.RatingRepository;
 import ru.bjcreslin.kinopoisk_web.service.MovieRating;
@@ -25,7 +26,8 @@ public class MovieRatingImpl implements MovieRating {
 
     private final RatingRepository ratingRepository;
 
-    private int ratingsLimit = 10;
+    @Value("${ratings.limit:10}")
+    private int ratingsLimit;
 
     public MovieRatingImpl(RatingRepository ratingRepository) {
         this.ratingRepository = ratingRepository;
@@ -37,7 +39,7 @@ public class MovieRatingImpl implements MovieRating {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(GETTING_DTO_ON_DATE, date.toString());
         }
-        var ratings = ratingRepository.findAllByDate(date);
+        var ratings = ratingRepository.findAllByMovieRatingPK_Date(date);
         if (ratings.isEmpty()) {
             LOGGER.info(NO_RESULTS_FOR_THIS_DATE, date);
             return Collections.emptyList();

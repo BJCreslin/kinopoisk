@@ -75,6 +75,8 @@ public class DbaseConclusion implements Conclusion {
     protected void saveToDb(Movie movie, Rating rating) {
         if (ratingRepository.findByMovieRatingPKMovieAndMovieRatingPKDate(movie, LocalDate.now()) == null) {
             try {
+                var ratRk = new MovieRatingPK(movie);
+                rating.setMovieRatingPK(ratRk);
                 movie.getRating().add(rating);
                 ratingRepository.save(rating);
                 movieRepository.save(movie);
