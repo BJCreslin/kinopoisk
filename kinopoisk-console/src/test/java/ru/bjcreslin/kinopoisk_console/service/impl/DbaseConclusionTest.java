@@ -52,14 +52,14 @@ class DbaseConclusionTest {
 
     @Test
     void shouldSave() {
-        dbaseConclusion.saveToDb(MovieGenerator.get(), RatingGenerator.get());
+        dbaseConclusion.saveRatingToDb(MovieGenerator.get(), RatingGenerator.get());
         verify(movieRepository, times(1)).save(any());
         verify(ratingRepository, times(1)).save(any());
     }
 
     @Test
     void shouldNewSave() {
-        dbaseConclusion.saveNewMovieToDb(MovieGenerator.get(), RatingGenerator.get());
+        dbaseConclusion.saveNewMovieAndRatingToDb(MovieGenerator.get(), RatingGenerator.get());
         verify(movieRepository, times(1)).save(any());
         verify(ratingRepository, times(1)).save(any());
     }

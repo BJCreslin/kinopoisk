@@ -43,19 +43,18 @@ public class DbaseConclusion implements Conclusion {
         this.movieRepository = movieRepository;
     }
 
-
     @Override
     @Transactional
     public void output(List<MovieWithRatingDto> movieList) {
         for (MovieWithRatingDto movieWithRatingDto : movieList) {
             var optionalMovie = movieRepository.findMovieByOriginalName(movieWithRatingDto.getOriginalName());
             if (Objects.nonNull(optionalMovie)) {
-                saveToDb(optionalMovie, getRatingFromDto(movieWithRatingDto));
+                saveRatingToDb(optionalMovie, getRatingFromDto(movieWithRatingDto));
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(MOVIE_RATING_HAD_BEING_SAVED, optionalMovie);
                 }
             } else {
-                saveNewMovieToDb(getMovieFromDto(movieWithRatingDto), getRatingFromDto(movieWithRatingDto));
+                saveNewMovieAndRatingToDb(getMovieFromDto(movieWithRatingDto), getRatingFromDto(movieWithRatingDto));
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(NEW_MOVIE_HAD_BEING_SAVED, movieWithRatingDto);
                 }
@@ -64,7 +63,7 @@ public class DbaseConclusion implements Conclusion {
         LOGGER.info(OBJECTS_WERE_SAVED, movieList.size());
     }
 
-    protected void saveNewMovieToDb(Movie movie, Rating rating) {
+    protected void saveNewMovieAndRatingToDb(Movie movie, Rating rating) {
         movie = movieRepository.save(movie);
         var ratRk = new MovieRatingPK(movie);
         rating.setMovieRatingPK(ratRk);
@@ -72,7 +71,7 @@ public class DbaseConclusion implements Conclusion {
         movie.getRating().add(rat);
     }
 
-    protected void saveToDb(Movie movie, Rating rating) {
+    protected void saveRatingToDb(Movie movie, Rating rating) {
         if (ratingRepository.findByMovieRatingPKMovieAndMovieRatingPKDate(movie, LocalDate.now()) == null) {
             try {
                 var ratRk = new MovieRatingPK(movie);
