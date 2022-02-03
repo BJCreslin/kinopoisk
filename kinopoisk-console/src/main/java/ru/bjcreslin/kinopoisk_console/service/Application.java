@@ -32,13 +32,17 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Element htmlBody;
-        if (args.length > 0 && args[0].equals(argKey)) {
-            htmlBody = alternateProvider.getHtmlBody();
-        } else {
-            htmlBody = provider.getHtmlBody();
+        try {
+            Element htmlBody;
+            if (args.length > 0 && args[0].equals(argKey)) {
+                htmlBody = alternateProvider.getHtmlBody();
+            } else {
+                htmlBody = provider.getHtmlBody();
+            }
+            var movies = kinoParser.getMoviesWithRating(htmlBody);
+            resulteres.forEach(x -> x.output(movies));
+        } catch (Exception ex) {
+            //
         }
-        var movies = kinoParser.getMoviesWithRating(htmlBody);
-        resulteres.forEach(x -> x.output(movies));
     }
 }

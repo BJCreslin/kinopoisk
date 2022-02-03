@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>KinoPoisk</title>
+</head>
+<body>
+
+<div>
+    INPUT DATE
+</div>
+<h1 th:text="${rating_date}"></h1>
+<table class="table">
+    <tr th:each="rating:${ratings}">
+
+        <td th:text="${rating.getPosition()}"></td>
+        <td th:text="${rating.getName()}"></td>
+        <td th:text="${rating.getOriginalName()}"></td>
+        <td th:text="${rating.getYear()}"></td>
+        <td th:text="${rating.getRatingValue()}"></td>
+        <td th:text="${rating.getVoters()}"></td>
+
+    </tr>
+</table>
+
+
+</body>
+</html>

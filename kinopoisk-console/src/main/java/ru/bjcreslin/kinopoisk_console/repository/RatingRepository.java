@@ -7,7 +7,6 @@ import ru.bjcreslin.kinopoisk_console.model.MovieRatingPK;
 import ru.bjcreslin.kinopoisk_console.model.Rating;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, MovieRatingPK> {
