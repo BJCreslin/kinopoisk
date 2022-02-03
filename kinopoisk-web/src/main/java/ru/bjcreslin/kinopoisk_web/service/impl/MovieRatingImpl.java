@@ -3,6 +3,7 @@ package ru.bjcreslin.kinopoisk_web.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.bjcreslin.kinopoisk_web.model.MovieWithRatingDto;
 import ru.bjcreslin.kinopoisk_web.model.Rating;
@@ -35,6 +36,7 @@ public class MovieRatingImpl implements MovieRating {
 
     @Override
     @Transactional
+    @Cacheable(value = "cache", key = "'by_date_' + #date.toString()")
     public List<MovieWithRatingDto> getRatingOnDate(LocalDate date) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(GETTING_DTO_ON_DATE, date.toString());
