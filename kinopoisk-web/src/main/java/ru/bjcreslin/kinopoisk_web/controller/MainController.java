@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.bjcreslin.kinopoisk_web.model.DateDto;
-import ru.bjcreslin.kinopoisk_web.service.impl.MovieRatingImpl;
+import ru.bjcreslin.kinopoisk_web.service.MovieRatingService;
 
 import java.time.LocalDate;
 
@@ -22,40 +22,50 @@ public class MainController {
 
     public static final String MAIN_CONTROLLER_URL = "";
 
+    public static final String ENDPOINT_URL = "/";
+
     public static final String INDEX = "index";
 
     private static final String DATE_FOR_RATING = "rating_date";
 
-    private final MovieRatingImpl movieRating;
+    public static final String ATTRIBUTE_NAME = "ratings";
 
-    public MainController(MovieRatingImpl movieRating) {
-        this.movieRating = movieRating;
+    private static final String ERROR_DATE = "Error date {}";
+
+    public static final String GETTING_DATA_FOR_A_DATE = "Getting data for a date {}";
+
+    public static final String GET_INDEX_PAGE = "Get index page.";
+
+    private final MovieRatingService movieRatingService;
+
+    public MainController(MovieRatingService movieRatingService) {
+        this.movieRatingService = movieRatingService;
     }
 
-    @GetMapping("/")
+    @GetMapping(ENDPOINT_URL)
     public String getIndex(Model model) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(GET_INDEX_PAGE);
+        }
         var ratingDay = new DateDto(LocalDate.now());
         model.addAttribute(DATE_FOR_RATING, ratingDay);
-        var ratings = movieRating.getRatingOnDate(ratingDay.getDate());
-        model.addAttribute("ratings", ratings);
+        var ratings = movieRatingService.getRatingOnDate(ratingDay.getDate());
+        model.addAttribute(ATTRIBUTE_NAME, ratings);
         return INDEX;
     }
 
-
     @PostMapping("/")
     public String getIndexPostDate(Model model, @ModelAttribute(DATE_FOR_RATING) DateDto ratingDay, BindingResult result) {
-
         if (result.hasErrors()) {
-            LOGGER.error("error date {}", ratingDay.getDate());
+            LOGGER.error(ERROR_DATE, ratingDay.getDate());
             ratingDay = new DateDto(LocalDate.now());
-
+        }
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(GETTING_DATA_FOR_A_DATE, ratingDay);
         }
         model.addAttribute(DATE_FOR_RATING, ratingDay);
-
-        var ratings = movieRating.getRatingOnDate(ratingDay.getDate());
-
-        model.addAttribute("ratings", ratings);
-
+        var ratings = movieRatingService.getRatingOnDate(ratingDay.getDate());
+        model.addAttribute(ATTRIBUTE_NAME, ratings);
         return INDEX;
     }
 }

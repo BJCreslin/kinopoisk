@@ -4,12 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class MovieWithRatingDto {
+public class MovieWithRatingDto implements Serializable {
+    private static final long serialVersionUID = 7675061857305330161L;
+
+    public static final transient String CACHE_NAME = "cache";
+
     private final String name;
     private final String originalName;
     private final String year;
